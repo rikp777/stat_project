@@ -3,7 +3,7 @@ import pandas as pd
 if __name__ == '__main__':
     dataset_volume_range = 1000
     df = pd.read_csv("./dataset/Webpages_Classification_test_data.csv", sep=',',
-                     usecols=['url', 'https', 'js_len', 'label'])
+                     usecols=['url', 'https', 'js_len', 'js_obf_len', 'label'])
     df = df.sort_values(
         by="label",
         ascending=False
@@ -25,6 +25,7 @@ if __name__ == '__main__':
     (1) Make random sample                                                      <- Anthon          
     (2) Select from df["label"] random select n of 'bad' and n of 'good'        <- Rik
     (3) Label url probability of gibberish                                      <- Rik & Anthon
+    (4) Exclude 0 values 
     
     
     Analyse data
