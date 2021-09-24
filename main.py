@@ -10,6 +10,8 @@ if __name__ == '__main__':
         by="label",
         ascending=False
     )
+    # Exclude invalid data rows with null values
+    df = df[df['js_len'] != 0.0]
 
     # Devide in two subgroups by label
     df_bad = df[df['label'] == 'bad']
