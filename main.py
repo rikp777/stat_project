@@ -1,23 +1,27 @@
 import pandas as pd
 
 if __name__ == '__main__':
-    dataset_volume_range = 1000
+    data_volume = 50
+    # Read dataset and get given columns
     df = pd.read_csv("./dataset/Webpages_Classification_test_data.csv", sep=',',
                      usecols=['url', 'https', 'js_len', 'js_obf_len', 'label'])
+    # Sort data
     df = df.sort_values(
         by="label",
         ascending=False
     )
 
+    # Devide in two subgroups by label
+    df_bad = df[df['label'] == 'bad']
+    df_good = df[df['label'] == 'good']
 
-    bad = df[df['label'] == 'bad']
-    good = df[df['label'] == 'good']
+    # Get sample of with data_volume
+    df_bad_sample = df_bad.sample(n=data_volume)
+    df_good_sample = df_good.sample(n=data_volume)
 
-    print(bad[:dataset_volume_range].to_string())
-    print(good[:dataset_volume_range].to_string())
+    print(df_bad_sample.to_string())
+    print(df_good_sample.to_string())
 
-# random sample of rows
-# equal numbers
 
 
 """
