@@ -2,6 +2,7 @@ import statistics
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 if __name__ == '__main__':
     data_volume = 10
@@ -26,11 +27,11 @@ if __name__ == '__main__':
     # df_good = df_good.sample(n=data_volume)
 
     # region label bad and js_len
-    # region  Distribution
     total_label_bad = len(df_bad) / len(df_total) * 100
     total_label_good = len(df_good) / len(df_total) * 100
     distribution_percentage_label = total_label_good, total_label_bad
 
+    # region  Distribution
     print("Distribution dataset label (good, bad)")
     print("Total label bad: ", str(round(total_label_bad, 2)))
     print("Total label good: ", str(round(total_label_good, 2)))
@@ -71,6 +72,18 @@ if __name__ == '__main__':
     df_total.boxplot(column='js_len', by='label')
     plt.show()
     # endregion
+
+    # region histogram total
+    df_total.groupby('label')['js_len'].plot(kind='kde', legend=True)
+    plt.show()
+    # endregion
+
+    fig, ax = plt.subplots(figsize=(2, 1))
+    ax.scatter(x=df_total['js_len'], y=df_total['label'])
+    plt.xlabel("Living Area Above Ground")
+    plt.ylabel("House Price")
+
+    plt.show()
     # endregion
 
 
