@@ -1,7 +1,10 @@
+import statistics
+
 import pandas as pd
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    data_volume = 50
+    data_volume = 10
     # Read dataset and get given columns
     df = pd.read_csv("./dataset/Webpages_Classification_test_data.csv", sep=',',
                      usecols=['url', 'https', 'js_len', 'js_obf_len', 'label'])
@@ -10,21 +13,89 @@ if __name__ == '__main__':
         by="label",
         ascending=False
     )
+    df.head()
     # Exclude invalid data rows with null values
-    df = df[df['js_len'] != 0.0]
+    df_total = df[df['js_len'] != 0.0]
 
     # Devide in two subgroups by label
-    df_bad = df[df['label'] == 'bad']
-    df_good = df[df['label'] == 'good']
+    df_bad = df_total[df_total['label'] == 'bad']
+    df_good = df_total[df_total['label'] == 'good']
 
     # Get sample of with data_volume
-    df_bad_sample = df_bad.sample(n=data_volume)
-    df_good_sample = df_good.sample(n=data_volume)
+    # df_bad = df_bad.sample(n=data_volume)
+    # df_good = df_good.sample(n=data_volume)
 
-    print(df_bad_sample.to_string())
-    print(df_good_sample.to_string())
+    # region label bad and js_len
+    # region  Distribution
+    total_label_bad = len(df_bad) / len(df_total) * 100
+    total_label_good = len(df_good) / len(df_total) * 100
+    distribution_percentage_label = total_label_good, total_label_bad
+
+    print("Distribution dataset label (good, bad)")
+    print("Total label bad: ", str(round(total_label_bad, 2)))
+    print("Total label good: ", str(round(total_label_good, 2)))
+
+    labels = 'good', 'bad'
+    colors = ['green', 'red']
+    plt.pie(distribution_percentage_label, labels=labels, autopct='%1.1f%%', colors=colors)
+    plt.title('Distribution dataset label (good, bad)')
+    plt.axis('equal')
+    plt.show()
+    # endregion
+
+    # region Boxplot Bad
+    print("Boxplot Bad data:")
+    df_bad_js_len = df_bad['js_len']
+    mean_ban_js_len = statistics.fmean(df_bad_js_len)
+    median_ban_js_len = statistics.median(df_bad_js_len)
+    print("Mean:", mean_ban_js_len)
+    print("Median:", median_ban_js_len)
+
+    df_bad.boxplot(column=['js_len'])
+    plt.show()
+    # endregion
+
+    # region Boxplot Good
+    print("Boxplot Good data:")
+    df_good_js_len = df_good['js_len']
+    mean_good_js_len = statistics.fmean(df_good_js_len)
+    median_good_js_len = statistics.median(df_good_js_len)
+    print("Mean:", mean_good_js_len)
+    print("Median:", median_good_js_len)
+
+    df_good.boxplot(column=['js_len'])
+    plt.show()
+    # endregion
+
+    # region Boxplot Total
+    df_total.boxplot(column='js_len', by='label')
+    plt.show()
+    # endregion
+    # endregion
 
 
+
+    # region bad & porn
+    bad_words = ['adult', 'porn', 'ass', 'tits', 'xxx', 'dildo', 'naked', 'sex', 'slave', 'naughty', 'fetish',
+                 'hardcore', 'escort', 'sluts', 'pussy', 'porno', 'eroti']
+    df_bad_filtered = df_bad[~df_bad.url.str.contains('|'.join(bad_words)).groupby(level=0).any()]
+    total_label_bad_porn = 100 - (len(df_bad_filtered) / len(df_bad) * 100)
+    total_label_bad = len(df_bad_filtered) / len(df_bad) * 100
+    distribution_percentage_label = total_label_bad_porn, total_label_bad
+
+    # region  Distribution
+    print("Distribution dataset label (bad, porn & bad)")
+    print("Total label bad but normal: ", str(round(total_label_bad, 2)))
+    print("Total label porn & bad: ", str(round(total_label_bad_porn, 2)))
+
+    labels = 'normal url & bad', 'porn url & bad'
+    colors = ['red', 'orange']
+    plt.pie(distribution_percentage_label, labels=labels, autopct='%1.1f%%', colors=colors)
+    plt.title('Distribution dataset label (bad, bad & porn) url')
+    plt.axis('equal')
+    plt.show()
+    # endregion
+    # endregion
 
 """
     Prep data 
@@ -56,15 +127,17 @@ if __name__ == '__main__':
             scatter plot
             subscatter plot
             density plot
+            histogram 
         
         Hypothesis testing
             Formulate hypothesis 
             H0 : no correlation
-            H1 : first correlation
-            H2 : second correlation
-            H3 : third correlation
+            H1 : first correlation | malware == big js volume 
+            H2 : second correlation | malware == no ssl 
+            H3 : third correlation  | malware == gibberish      p(x >= waarde | h1 true)
         
             check assumption 
+            test hypothesis needs to be 99% otherwise it needs to be rejected 
             suppose the hypothesis is true
             
             qq plot
