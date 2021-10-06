@@ -4,6 +4,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+import scipy
+import scipy.stats
+
+# now you can use
+scipy.stats.poisson
+# if you want it more accessible you could do what you did above
+from scipy.stats import poisson
+
+# then call poisson directly
+poisson
+
 if __name__ == '__main__':
     data_volume = 10
     # Read dataset and get given columns
@@ -56,6 +67,8 @@ if __name__ == '__main__':
     plt.show()
     # endregion
 
+    print(df_bad.to_string())
+
     # region Boxplot Good
     print("Boxplot Good data:")
     df_good_js_len = df_good['js_len']
@@ -78,15 +91,13 @@ if __name__ == '__main__':
     plt.show()
     # endregion
 
-    fig, ax = plt.subplots(figsize=(2, 1))
+    fig, ax = plt.subplots(figsize=(5, 2))
     ax.scatter(x=df_total['js_len'], y=df_total['label'])
-    plt.xlabel("Living Area Above Ground")
-    plt.ylabel("House Price")
+    plt.xlabel("Label (Good, Bad)")
+    plt.ylabel("js_len")
 
     plt.show()
     # endregion
-
-
 
     # region bad & porn
     bad_words = ['adult', 'porn', 'ass', 'tits', 'xxx', 'dildo', 'naked', 'sex', 'slave', 'naughty', 'fetish',
@@ -109,6 +120,8 @@ if __name__ == '__main__':
     plt.show()
     # endregion
     # endregion
+
+
 
 """
     Prep data 
@@ -141,11 +154,15 @@ if __name__ == '__main__':
             subscatter plot
             density plot
             histogram 
+            
+            
+        significance beta alfa confidence interval 
         
         Hypothesis testing
             Formulate hypothesis 
             H0 : no correlation
-            H1 : first correlation | malware == big js volume 
+            H
+            1 : first correlation | malware == big js volume 
             H2 : second correlation | malware == no ssl 
             H3 : third correlation  | malware == gibberish      p(x >= waarde | h1 true)
         
