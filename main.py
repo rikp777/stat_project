@@ -121,6 +121,21 @@ if __name__ == '__main__':
     # endregion
     # endregion
 
+    df_good_filtered = df_good[~df_good.url.str.contains('|'.join(bad_words)).groupby(level=0).any()]
+    total_label_good_porn = 100 - (len(df_good_filtered) / len(df_good) * 100)
+    total_label_good = len(df_good_filtered) / len(df_good) * 100
+    distribution_percentage_label_good = total_label_bad_porn, total_label_bad
+    print(df_good_filtered.to_string())
+    # region  Distribution
+    print("Distribution dataset label (bad, pornographic & bad)")
+    print("Total label good and normal: ", str(round(total_label_good, 2)))
+    print("Total label pornographic & good: ", str(round(total_label_good_porn, 2)))
+
+    labels = 'normal url & good', 'pornographic url & good'
+    colors = ['red', 'orange']
+    plt.pie(distribution_percentage_label_good, labels=labels, autopct='%1.1f%%', colors=colors)
+    plt.title('Distribution dataset label (good, good & pornographic) url')
+    plt.axis('equal')
 
 
 """
